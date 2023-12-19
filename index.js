@@ -22,10 +22,26 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const taskCollection = client.db("todoapp").collection("todo");
-    
+    const xcourses = client.db("todoapp").collection("xcourses");
 
-} finally {
+    // creating a course
+
+    app.post("/api/course/add", async (req, res) => {
+      const newCourse = req.body;
+      console.log(newCourse);
+      const result = await xcourses.insertOne(newCourse);
+      res.send("The course has been added successfully");
+    });
+
+    // Display Course List
+
+    app.get("/api/course/allcourses", async (req, res) => {
+      const query = {};
+      const cursor = xcourses.find(query);
+      const allCourses = await cursor.toArray();
+      res.send(allCourses);
+    });
+  } finally {
   }
 }
 
